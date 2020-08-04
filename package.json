@@ -8,8 +8,8 @@
     "build": "gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "start": "npm run develop",
-    "serve": "gatsby serve",
+    "start": "node --max_old_space_size=256 ./node_modules/.bin/gatsby serve -p $PORT -H 0.0.0.0",
+    "serve": "node --max_old_space_size=256 ./node_modules/.bin/gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   },

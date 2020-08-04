@@ -1,0 +1,5 @@
+build:
+  docker:
+    evendilo-ui: Dockerfile
+run:
+  evendilo-ui: yarn serve
