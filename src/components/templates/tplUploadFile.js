@@ -68,7 +68,7 @@ class TplUploadFile extends React.Component {
       this.uploadResultListEntries.push(result)
     }
     packet.results = this.uploadResultListEntries
-    setTimeout(() => this.props.callback(packet), 100)
+    this.props.callback(packet)
   }
 
   componentDidMount() {

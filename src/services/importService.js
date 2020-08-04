@@ -1,17 +1,18 @@
 import { Actions } from "../actions/createActions"
 import { BASE_PATH } from "./reduxService"
 
-function upload(destination, request) {
+function upload(state, destination, request) {
   const { value, entityName } = request.target
   const formData = new FormData()
   formData.append('file', value)
 
-  return fetch(`${BASE_PATH}/import/standard/${destination}/${entityName.key}`, {
+  fetch(`${BASE_PATH}/import/standard/${destination}/${entityName.key}`, {
     method: 'POST',
     body: formData
   })
-    .then(response => response.json())
-    .catch(e => throw new Error(e))
+  .catch(e => throw new Error(e))
+  let payload = Object.assign({}, state.payload[destination], { started: true })
+  return Promise.resolve(payload)
 }
 
 function refresh(request) {
@@ -30,7 +31,7 @@ export async function handleImport(state, action, next) {
   let fetch
   switch (request ? request.event : "") {
     case "upload":
-      fetch = upload(destination, request)
+      fetch = upload(state, destination, request)
       break
     case "refresh":
       fetch = refresh(request)
