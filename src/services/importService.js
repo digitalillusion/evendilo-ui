@@ -1,5 +1,6 @@
 import { Actions } from "../actions/createActions"
-import { BASE_PATH } from "./reduxService"
+import { BASE_PATH, handleErrors } from "./reduxService"
+import { getCookie } from "../functions"
 
 function upload(state, destination, request) {
   const { value, entityName } = request.target
@@ -8,8 +9,13 @@ function upload(state, destination, request) {
 
   fetch(`${BASE_PATH}/import/standard/${destination}/${entityName.key}`, {
     method: 'POST',
-    body: formData
+    body: formData,
+    credentials: 'include',
+    headers: new Headers({
+      'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
+    }),
   })
+  .then(handleErrors)
   .catch(e => throw new Error(e))
   let payload = Object.assign({}, state.payload[destination], { started: true })
   return Promise.resolve(payload)
@@ -20,9 +26,11 @@ function refresh(request) {
 }
 
 function status(destination) {
-  return fetch(`${BASE_PATH}/import/standard/${destination}`)
-    .then(response => response.json())
-    .catch(e => throw new Error(e))
+  return fetch(`${BASE_PATH}/import/standard/${destination}`, {
+    credentials: 'include'
+  })
+  .then(handleErrors)
+  .catch(e => throw new Error(e))
 }
 
 export async function handleImport(state, action, next) {

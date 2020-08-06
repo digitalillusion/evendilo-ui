@@ -4,6 +4,7 @@ import {
 } from "gatsby-plugin-silverghost/lib/actions"
 
 const definitions = {
+  SESSION: makeAction("@@App/SESSION", "session"),
   IMPORTER: makeAction("@@App/IMPORTER", "importer", "/:destination", {
     destination: ["woocommerce"]
   })

@@ -17,7 +17,6 @@ const useStyles = makeStyles(styles)
 export default function Home() {
   const store = useStore()
   const classes = useStyles()
-  const navigationBuilder = new NavigationBuilder(store, globalHistory)
 
   const importer = useSelector(state => state.importer, [])
   if (isEmpty(importer)) {
@@ -27,7 +26,7 @@ export default function Home() {
   const [destination] = importer.params
   const upload = importer.payload[destination]
 
-  const navigation = navigationBuilder
+  const navigation = new NavigationBuilder(store, globalHistory)
     .withEvent(Actions.IMPORTER, { mapper: (action, input) => action.params = [destination, input.target], ajax: true })
     .build();
 

@@ -1,5 +1,11 @@
-import React from "react"
+import React, { useEffect } from "react"
 import IntlProvider from "react-intl/lib/src/components/provider"
+import { useSelector, useStore } from "react-redux"
+import { NavigationBuilder } from "gatsby-plugin-silverghost/lib/components/NavigationBuilder"
+import { globalHistory } from "@reach/router"
+import { isEmpty, t } from "../functions"
+import { Actions } from "../actions/createActions"
+import Button from "@material-ui/core/Button"
 
 const i18nMessages = {
   "import.upload.enrichment_file" : "File d'arricchimento",
@@ -10,14 +16,54 @@ const i18nMessages = {
   'tpl.enhancedTable.filter': 'Filter',
   'tpl.enhancedTable.cancel': 'Cancel',
   'tpl.enhancedDialog.placeholder' : 'Enter a {0}',
-  'tpl.upload.upload' : 'Upload'
+  'tpl.upload.upload' : 'Upload',
+
+  'session.login' : 'Login',
+  'session.loggedAs' : ' Logged as {0}',
+  'session.logout' : 'Logout'
 }
 
+function SessionButton({ onClick, label }) {
+  return <Button onClick={onClick} variant="contained">{ label }</Button>
+}
+
+function Anonymous({ navigation }) {
+  return <div>
+    <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login" }) } label={t('session.login')} />
+  </div>
+}
+
+function Authenticated({session, navigation, children}) {
+  return <div>
+    <p>
+      <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "logout" }) } label={t('session.logout')} />
+      <span>{t('session.loggedAs', session.authentication.name)}</span>
+
+    </p>
+    {children}
+  </div>
+}
 
 export default function Layout({ children }) {
+  const store = useStore()
+  const session = useSelector(state => state.session, []).payload
+  const isAnonymous = isEmpty(session) || session.anonymous
+
+  const navigation = new NavigationBuilder(store, globalHistory)
+    .withEvent(Actions.SESSION, { mapper: (action, input) => action.params = [input.target], ajax: true })
+    .build();
+
+  useEffect(() => {
+    if(isEmpty(session)) {
+      navigation.onEvent(Actions.SESSION)({ event: "whois" })
+    } else if (!session.anonymous) {
+      navigation.refresh()
+    }
+  }, [isAnonymous])
+
   return (
     <IntlProvider key={ 'en' } locale={ 'en' }  messages={ i18nMessages }>
-      {children}
+      { isAnonymous ? <Anonymous navigation={navigation} /> : <Authenticated session={session} navigation={navigation}>{children}</Authenticated> }
     </IntlProvider>
   )
 }

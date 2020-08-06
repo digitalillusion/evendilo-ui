@@ -50,3 +50,18 @@ export const isEmpty = (o) => {
 export const isObject = value => {
   return value && typeof value === 'object' && value.constructor === Object;
 }
+
+export const getCookie = name => {
+  if (!document.cookie) {
+    return null;
+  }
+
+  const xsrfCookies = document.cookie.split(';')
+    .map(c => c.trim())
+    .filter(c => c.startsWith(name + '='));
+
+  if (xsrfCookies.length === 0) {
+    return null;
+  }
+  return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+}

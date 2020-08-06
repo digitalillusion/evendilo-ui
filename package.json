@@ -23,7 +23,7 @@
     "babel-preset-gatsby-package": "^0.5.2",
     "classnames": "^2.2.6",
     "gatsby": "^2.23.12",
-    "gatsby-plugin-silverghost": "^0.2.11",
+    "gatsby-plugin-silverghost": "^0.2.14",
     "net": "^1.0.2",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",

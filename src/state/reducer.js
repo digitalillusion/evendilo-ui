@@ -8,6 +8,7 @@ import {
 const initialState = {}
 
 const rootReducer = combineReducers({
+  [Actions.SESSION.getReducerKey()]: DefaultReducer.instance(initialState, Actions.SESSION),
   [Actions.IMPORTER.getReducerKey()]: accumulate(
     DefaultReducer.instance(initialState, Actions.IMPORTER)
   )
