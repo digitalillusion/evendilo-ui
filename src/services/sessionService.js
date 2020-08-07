@@ -27,7 +27,7 @@ function logout(redirect  = true) {
   })
 }
 
-function whois(dispatch) {
+function whois() {
   return fetch(`${BASE_PATH}/session`, {
     credentials: 'include'
   })
@@ -56,7 +56,7 @@ export async function handleSession(dispatch, action, next) {
       fetch = logout()
       break
     default:
-      fetch = whois(dispatch)
+      fetch = whois()
   }
   const payload = await fetch
   next(Actions.SESSION.propagate(action, {

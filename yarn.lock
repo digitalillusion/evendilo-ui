@@ -5430,10 +5430,10 @@ gatsby-plugin-page-creator@^2.3.12:
     lodash "^4.17.15"
     micromatch "^3.1.10"
 
-gatsby-plugin-silverghost@^0.2.14:
-  version "0.2.14"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-silverghost/-/gatsby-plugin-silverghost-0.2.14.tgz#2d14c895492db8bd41cf766cd5cda279066ea49a"
-  integrity sha512-01XBuXiJvSuomszjVD9mX5+fmVP5ygq/SuPetOCDBOEbz5U3mDO877tdBhYANHM4ux1/ADlqvj57ecJKTLGB4A==
+gatsby-plugin-silverghost@^0.2.16:
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-silverghost/-/gatsby-plugin-silverghost-0.2.16.tgz#f58cdf38b21f277f1a242306eb6ff5de2689570a"
+  integrity sha512-b3i9NX9wb7xJuEFo9W+k4P1ziunmmjURi3pPaZCxf9EzshgxyvktohVFIwMKhkm6tReeU7hUhacVYtvqWCO2jg==
   dependencies:
     serialize-javascript "^4.0.0"
 

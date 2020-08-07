@@ -50,7 +50,7 @@ export default function Layout({ children }) {
   const isAnonymous = isEmpty(session) || session.anonymous
 
   const navigation = new NavigationBuilder(store, globalHistory)
-    .withEvent(Actions.SESSION, { mapper: (action, input) => action.params = [input.target], ajax: true })
+    .withEvent(Actions.SESSION, { mapper: (action, input) => action.params = [input.target] })
     .build();
 
   useEffect(() => {

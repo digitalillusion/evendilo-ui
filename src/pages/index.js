@@ -27,7 +27,7 @@ export default function Home() {
   const upload = importer.payload[destination]
 
   const navigation = new NavigationBuilder(store, globalHistory)
-    .withEvent(Actions.IMPORTER, { mapper: (action, input) => action.params = [destination, input.target], ajax: true })
+    .withEvent(Actions.IMPORTER, { mapper: (action, input) => action.params = [destination, input.target] })
     .build();
 
   let results = upload.results
