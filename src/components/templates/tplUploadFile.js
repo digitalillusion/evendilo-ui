@@ -152,11 +152,14 @@ class TplUploadFile extends React.Component {
       if (!scope.isUploadInProgress() && uploadResultListEntries.length === 0) {
         return null
       }
+      const uploadPercent = Math.min(uploadProgress, 100)
+
       return (<div className={classes.progress}>
-        <Typography variant={"caption"}>{intl.formatMessage({ id : 'tpl.upload.filename' }, { '0' : scope.state.file.name || uploadFilename })}</Typography>
+        { uploadPercent == 100 && <Typography variant={"caption"}>{intl.formatMessage({ id : 'tpl.upload.completed' })}</Typography> }
+        { uploadPercent < 100 && <Typography variant={"caption"}>{intl.formatMessage({ id : 'tpl.upload.filename' }, { '0' : scope.state.file.name || uploadFilename })}</Typography> }
         <LinearProgress { ...(uploadProgress === 0 || uploadProgress === Infinity  ?
             { variant : 'indeterminate' }  :
-            { variant : 'determinate', value : uploadProgress}
+            { variant : 'determinate', value : uploadPercent}
         )} />
         <TplEnhancedTable headers={uploadResultListEntryProperties} rows={uploadResultListEntries} />
       </div>)

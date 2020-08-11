@@ -5,12 +5,13 @@ import { globalHistory } from "@reach/router"
 import { useSelector, useStore } from "react-redux"
 import { makeStyles } from "@material-ui/styles"
 import { Actions } from "../actions/createActions"
-import { isEmpty } from "../functions"
+import { isEmpty, t } from "../functions"
 import TplLoading from "../components/templates/tplLoading"
 
-import { styles } from "../styles/import"
+import { styles } from "../styles/importer"
 import Layout from "../components/layout"
 import { BASE_PATH } from "../services/reduxService"
+import Button from "@material-ui/core/Button"
 
 const useStyles = makeStyles(styles)
 
@@ -61,6 +62,7 @@ export default function Home() {
         selectEntries={entries}
         defaultSelectEntry={entries[0]}
       />
+      {upload.completed && <Button onClick={target => navigation.onEvent(Actions.IMPORTER)({ event: "restart", target })} variant="contained">{ t("importer.upload.restart") }</Button>}
     </Layout>
   )
 }

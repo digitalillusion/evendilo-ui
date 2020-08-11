@@ -13,4 +13,7 @@ export const styles = theme => ({
   progress : {
     flexGrow: 1
   },
+  loggedAs : {
+    display: "inline"
+  }
 });

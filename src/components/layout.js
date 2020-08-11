@@ -6,11 +6,18 @@ import { globalHistory } from "@reach/router"
 import { isEmpty, t } from "../functions"
 import { Actions } from "../actions/createActions"
 import Button from "@material-ui/core/Button"
+import { Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/styles"
+import { styles } from "../styles/importer"
+
+const useStyles = makeStyles(styles)
 
 const i18nMessages = {
-  "import.upload.enrichment_file" : "File d'arricchimento",
+  "importer.upload.enrichment_file" : "File d'arricchimento",
+  "importer.upload.restart" : "Restart",
 
   'tpl.upload.filename' : 'Uploading file {0}',
+  'tpl.upload.completed' : 'Upload completed',
   'tpl.upload.empty' : 'No messages to display',
   'tpl.enhancedTable.filterResults': 'Filter results',
   'tpl.enhancedTable.filter': 'Filter',
@@ -33,11 +40,11 @@ function Anonymous({ navigation }) {
   </div>
 }
 
-function Authenticated({session, navigation, children}) {
+function Authenticated({classes, session, navigation, children}) {
   return <div>
     <p>
       <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "logout" }) } label={t('session.logout')} />
-      <span>{t('session.loggedAs', session.authentication.name)}</span>
+      <Typography className={classes.loggedAs}>{t('session.loggedAs', session.authentication.name)}</Typography>
 
     </p>
     {children}
@@ -46,6 +53,7 @@ function Authenticated({session, navigation, children}) {
 
 export default function Layout({ children }) {
   const store = useStore()
+  const classes = useStyles()
   const session = useSelector(state => state.session, []).payload
   const isAnonymous = isEmpty(session) || session.anonymous
 
@@ -63,7 +71,7 @@ export default function Layout({ children }) {
 
   return (
     <IntlProvider key={ 'en' } locale={ 'en' }  messages={ i18nMessages }>
-      { isAnonymous ? <Anonymous navigation={navigation} /> : <Authenticated session={session} navigation={navigation}>{children}</Authenticated> }
+      { isAnonymous ? <Anonymous navigation={navigation} /> : <Authenticated  classes={classes} session={session} navigation={navigation}>{children}</Authenticated> }
     </IntlProvider>
   )
 }

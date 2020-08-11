@@ -1,5 +1,5 @@
 import { Actions } from "../actions/createActions"
-import { BASE_PATH, handleErrors } from "./reduxService"
+import { BASE_PATH, handleErrorsAndResponse } from "./reduxService"
 import { getCookie, isEmpty } from "../functions"
 
 function login() {
@@ -19,7 +19,7 @@ function logout(redirect  = true) {
       }),
       credentials: 'include'
     })
-      .then(handleErrors)
+      .then(handleErrorsAndResponse)
       .catch(e => throw new Error(e))
   }
   return Promise.resolve({
@@ -32,7 +32,7 @@ function whois() {
     credentials: 'include'
   })
     .then(async response => {
-      let authentication = await handleErrors(response);
+      let authentication = await handleErrorsAndResponse(response);
       if (isEmpty(authentication)) {
         return logout(false)
       }

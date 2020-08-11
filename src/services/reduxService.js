@@ -5,7 +5,7 @@ import { isEmpty } from "../functions"
 
 export const BASE_PATH = `${process.env.GATSBY_API_URL}`
 
-export function handleErrors(response) {
+export function handleErrorsAndResponse(response) {
   if (!response.ok) {
     throw Error(response.statusText);
   }
