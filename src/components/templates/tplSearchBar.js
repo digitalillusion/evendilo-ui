@@ -237,7 +237,7 @@ class TplSearchBar extends React.Component {
 
 
   render() {
-    const { children, classes, theme, selectProps, optionsMapper, input } = this.props;
+    const { classes, theme, selectProps, optionsMapper, input } = this.props;
 
     const selectStyles = {
       input: base => ({

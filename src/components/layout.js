@@ -12,6 +12,10 @@ import { styles } from "../styles/importer"
 
 const useStyles = makeStyles(styles)
 
+//if (typeof window !== "undefined" && window.document) {
+//  document.domain = `${process.env.GATSBY_DOCUMENT_DOMAIN}`
+//}
+
 const i18nMessages = {
   "importer.upload.enrichment_file" : "File d'arricchimento",
   "importer.upload.restart" : "Restart",
@@ -26,7 +30,7 @@ const i18nMessages = {
   'tpl.upload.upload' : 'Upload',
 
   'session.login' : 'Login',
-  'session.loggedAs' : ' Logged as {0}',
+  'session.loggedAs' : ' Logged as {0} on {1}',
   'session.logout' : 'Logout'
 }
 
@@ -44,7 +48,7 @@ function Authenticated({classes, session, navigation, children}) {
   return <div>
     <p>
       <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "logout" }) } label={t('session.logout')} />
-      <Typography className={classes.loggedAs}>{t('session.loggedAs', session.authentication.name)}</Typography>
+      <Typography className={classes.loggedAs}>{t('session.loggedAs', session.authentication.name, session.authentication.domain)}</Typography>
 
     </p>
     {children}

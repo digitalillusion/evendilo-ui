@@ -155,7 +155,7 @@ class TplUploadFile extends React.Component {
       const uploadPercent = Math.min(uploadProgress, 100)
 
       return (<div className={classes.progress}>
-        { uploadPercent == 100 && <Typography variant={"caption"}>{intl.formatMessage({ id : 'tpl.upload.completed' })}</Typography> }
+        { uploadPercent === 100 && <Typography variant={"caption"}>{intl.formatMessage({ id : 'tpl.upload.completed' })}</Typography> }
         { uploadPercent < 100 && <Typography variant={"caption"}>{intl.formatMessage({ id : 'tpl.upload.filename' }, { '0' : scope.state.file.name || uploadFilename })}</Typography> }
         <LinearProgress { ...(uploadProgress === 0 || uploadProgress === Infinity  ?
             { variant : 'indeterminate' }  :

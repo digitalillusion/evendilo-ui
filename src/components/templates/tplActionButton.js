@@ -8,7 +8,7 @@ import {
 
 const TplActionButton = ({label = "", className="", color = "primary", icon = null, onClick = () => {}, contained = undefined, name = ""}) => {
   if (contained) {
-    return  <div className={className} color={color} variant="contained" onClick={onClick}>
+    return  <div className={className} color={color} variant="contained" role="button" onClick={onClick}>
       {icon}
       <Typography className={className} variant="button" color={color}>{label}</Typography>
     </div>;
