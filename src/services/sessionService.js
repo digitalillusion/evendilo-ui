@@ -2,8 +2,8 @@ import { Actions } from "../actions/createActions"
 import { BASE_PATH, handleErrorsAndResponse } from "./reduxService"
 import { getCookie, isEmpty } from "../functions"
 
-function login() {
-  window.location.href = `${BASE_PATH}/oauth2/authorization/pierretappeti`
+function login(destination) {
+  window.location.href = `${BASE_PATH}/oauth2/authorization/pierretappeti-${destination}`
   return Promise.resolve({
     anonymous: true
   })
@@ -50,7 +50,7 @@ export async function handleSession(dispatch, action, next) {
   let fetch
   switch (request ? request.event : "") {
     case "login":
-      fetch = login()
+      fetch = login(request.destination)
       break
     case "logout":
       fetch = logout()

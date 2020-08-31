@@ -40,7 +40,7 @@ class TplUploadFile extends React.Component {
 
     this.state = {
       wsConnected: false,
-      entityName: props.defaultSelectEntry ? props.defaultSelectEntry : '',
+      entity: props.defaultSelectEntry ? props.defaultSelectEntry.key : '',
       file: {},
     }
 
@@ -104,7 +104,7 @@ class TplUploadFile extends React.Component {
 
       const getUploadFileState = () => ({
         value : scope.state.file,
-        entityName : scope.state.entityName
+        entity : scope.state.entity
       });
       return (<span>
                 <FormControl className={classes.formControl} style={{ display: hasSelect ? "inline-flex" : "none", verticalAlign: "bottom" }}>
@@ -112,7 +112,7 @@ class TplUploadFile extends React.Component {
                     <InputLabel htmlFor="age-simple">{selectLabel}</InputLabel>}
                   {hasSelect &&
                   <Select
-                    value={ scope.state.entityName}
+                    value={ scope.state.entity}
                     inputProps={{
                       id: htmlId + '-select',
                       name: htmlId + '-select'
@@ -120,7 +120,7 @@ class TplUploadFile extends React.Component {
                     onChange={event => {
                       let target = event.target
                       let callback = scope.selectOnChange
-                      scope.setState({entityName: target.value}, () => {
+                      scope.setState({entity: target.value}, () => {
                         callback(target)
                       })
                     }}>
@@ -141,7 +141,7 @@ class TplUploadFile extends React.Component {
                 {buttonComponent({
                   label:  t('tpl.upload.upload'),
                   icon : <FileUpload />,
-                  disabled : scope.state.entityName === '',
+                  disabled : scope.state.entity === '',
                   onClick: () => scope.inputRef.current.click(),
                   getUploadFileState: getUploadFileState
                 })}

@@ -24,31 +24,50 @@ export default function Home() {
     return <Layout><TplLoading/></Layout>
   }
 
-  const [destination] = importer.params
-  const upload = importer.payload[destination]
+  const [family, destination] = importer.params
+  const upload = importer.payload[family][destination]
 
   const navigation = new NavigationBuilder(store, globalHistory)
-    .withEvent(Actions.IMPORTER, { mapper: (action, input) => action.params = [destination, input.target] })
+    .withEvent(Actions.IMPORTER, { mapper: (action, input) => {
+      switch (input.target.event) {
+        case "upload" :
+          action.params = [input.target.entity.family, input.target.entity.destination, input.target]
+          break
+        default:
+          action.params = [family, destination, input.target]
+      }
+      return action
+    }})
     .build();
 
   let results = upload.results
   let lastResult = (results && results.length > 0) ? results.sort((r1,r2) => r2.index - r1.index)[0] : undefined
 
-  const entries = upload.categories.map(c => {
-    const entityName = c.substr(upload.importTags.reduce((acc, tag) => acc + tag.type.length, 0))
-    return { key: entityName, value: entityName }
+  const entries = upload.categories
+    .map(c => {
+    const parts = c.replace(/([a-z])([A-Z])/g, '$1 $2').split(" ");
+    const entityKey = {
+      family: parts[0].toLowerCase(),
+      destination: parts[1].toLowerCase(),
+      name: c
+    }
+    upload.importTags.forEach(t => c.replace(t, ""))
+    const entityLabel = t('importer.upload.entity.' + c)
+    return { key: entityKey, value: entityLabel }
   })
+  .filter(e => e.key.family === family && e.key.destination === destination)
   return (
     <Layout>
       <TplUploadFile
+        htmlId="import"
         classes={classes}
         fileMimeTypes={'.*'}
-        uploadOnClick={target => navigation.onEvent(Actions.IMPORTER)({ event: "upload", target })}
+        uploadOnClick={target => navigation.onEvent(Actions.IMPORTER)({ event: "upload", entity: target.entity, file: target.value })}
         uploadProgress={lastResult ? 100 * (lastResult.index + 1) / lastResult.count : 0}
         uploadResultListEntries={results}
         uploadStarted={upload.started}
         uploadCompleted={upload.completed}
-        uploadSubscriberUrl={`/topic/import/standard/${destination}`}
+        uploadSubscriberUrl={`/topic/import/${family}/${destination}`}
         websocket={`${BASE_PATH}/messages`}
         websocketHeaders={{}}
         callback={payload => navigation.onEvent(Actions.IMPORTER)({ event: "refresh", target: payload })}

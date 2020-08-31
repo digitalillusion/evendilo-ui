@@ -2,8 +2,8 @@ import { Actions } from "../actions/createActions"
 import { BASE_PATH, handleErrorsAndResponse } from "./reduxService"
 import { getCookie } from "../functions"
 
-function restart(destination) {
-  return fetch(`${BASE_PATH}/import/standard/${destination}`, {
+function restart(family, destination) {
+  return fetch(`${BASE_PATH}/import/${family}/${destination}`, {
     method: 'PUT',
     credentials: 'include',
     headers: new Headers({
@@ -14,12 +14,13 @@ function restart(destination) {
   .catch(e => throw new Error(e))
 }
 
-function upload(state, destination, request) {
-  const { value, entityName } = request.target
+function upload(state, request) {
+  const { file, entity } = request
+  const { family, destination, name } = entity
   const formData = new FormData()
-  formData.append('file', value)
+  formData.append('file', file)
 
-  fetch(`${BASE_PATH}/import/standard/${destination}/${entityName.key}`, {
+  fetch(`${BASE_PATH}/import/${family}/${destination}/${name}`, {
     method: 'POST',
     body: formData,
     credentials: 'include',
@@ -29,7 +30,10 @@ function upload(state, destination, request) {
   })
   .then(handleErrorsAndResponse)
   .catch(e => throw new Error(e))
-  let payload = Object.assign({}, state.payload[destination], { started: true })
+  let payload = {
+    categories: [],
+    started: true
+  }
   return Promise.resolve(payload)
 }
 
@@ -37,8 +41,8 @@ function refresh(request) {
   return Promise.resolve(request.target)
 }
 
-function status(destination) {
-  return fetch(`${BASE_PATH}/import/standard/${destination}`, {
+function status(family, destination) {
+  return fetch(`${BASE_PATH}/import/${family}/${destination}`, {
     credentials: 'include'
   })
   .then(handleErrorsAndResponse)
@@ -46,25 +50,25 @@ function status(destination) {
 }
 
 export async function handleImport(state, action, next) {
-  let [destination, request] = action.params
+  let [family, destination, request] = action.params
 
   let fetch
   switch (request ? request.event : "") {
     case "restart":
-      fetch = restart(destination)
+      fetch = restart(family, destination)
       break
     case "upload":
-      fetch = upload(state, destination, request)
+      fetch = upload(state, request)
       break
     case "refresh":
       fetch = refresh(request)
       break
     default:
-      fetch = status(destination)
+      fetch = status(family, destination)
   }
   const payload = await fetch
   next(Actions.IMPORTER.propagate(action, {
-    params: [destination],
+    params: [family, destination],
     payload
   }))
 }

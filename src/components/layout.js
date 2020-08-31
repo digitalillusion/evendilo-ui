@@ -17,8 +17,10 @@ const useStyles = makeStyles(styles)
 //}
 
 const i18nMessages = {
-  "importer.upload.enrichment_file" : "File d'arricchimento",
   "importer.upload.restart" : "Restart",
+  "importer.upload.entity.StandardAmazonProduct" : "Amazon",
+  "importer.upload.entity.StandardEbayProduct" : "ebay",
+  "importer.upload.entity.StandardWoocommerceProduct" : "WooCommerce",
 
   'tpl.upload.filename' : 'Uploading file {0}',
   'tpl.upload.completed' : 'Upload completed',
@@ -29,8 +31,9 @@ const i18nMessages = {
   'tpl.enhancedDialog.placeholder' : 'Enter a {0}',
   'tpl.upload.upload' : 'Upload',
 
-  'session.login' : 'Login',
-  'session.loggedAs' : ' Logged as {0} on {1}',
+  'session.login.woocommerce' : 'WooCommerce Login',
+  'session.login.ebay' : 'eBay Login',
+  'session.loggedAs' : ' Logged as {0} on {1} ({2})',
   'session.logout' : 'Logout'
 }
 
@@ -40,7 +43,8 @@ function SessionButton({ onClick, label }) {
 
 function Anonymous({ navigation }) {
   return <div>
-    <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login" }) } label={t('session.login')} />
+    <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "ebay" }) } label={t('session.login.ebay')} />
+    <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "woocommerce" }) } label={t('session.login.woocommerce')} />
   </div>
 }
 
@@ -48,7 +52,7 @@ function Authenticated({classes, session, navigation, children}) {
   return <div>
     <p>
       <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "logout" }) } label={t('session.logout')} />
-      <Typography className={classes.loggedAs}>{t('session.loggedAs', session.authentication.name, session.authentication.domain)}</Typography>
+      <Typography className={classes.loggedAs}>{t('session.loggedAs', session.authentication.name, session.authentication.destination, session.authentication.clientId)}</Typography>
 
     </p>
     {children}
@@ -63,13 +67,14 @@ export default function Layout({ children }) {
 
   const navigation = new NavigationBuilder(store, globalHistory)
     .withEvent(Actions.SESSION, { mapper: (action, input) => action.params = [input.target] })
+    .withEvent(Actions.IMPORTER, { mapper: (action, input) => action.params = [input.target.family, input.target.destination] })
     .build();
 
   useEffect(() => {
     if(isEmpty(session)) {
       navigation.onEvent(Actions.SESSION)({ event: "whois" })
     } else if (!session.anonymous) {
-      navigation.refresh()
+      navigation.onEvent(Actions.IMPORTER)({ family: "standard", destination: session.authentication.destination })
     }
   }, [isAnonymous])
 
