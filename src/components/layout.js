@@ -37,13 +37,13 @@ const i18nMessages = {
   'session.logout' : 'Logout'
 }
 
-function SessionButton({ onClick, label }) {
-  return <Button onClick={onClick} variant="contained">{ label }</Button>
+function SessionButton({ onClick, label, style }) {
+  return <Button style={style} onClick={onClick} variant="contained">{ label }</Button>
 }
 
 function Anonymous({ navigation }) {
   return <div>
-    <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "ebay" }) } label={t('session.login.ebay')} />
+    <SessionButton style={{ display: "none" }} onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "ebay" }) } label={t('session.login.ebay')} />
     <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "woocommerce" }) } label={t('session.login.woocommerce')} />
   </div>
 }

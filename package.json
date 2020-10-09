@@ -6,7 +6,8 @@
   "license": "0BSD",
   "scripts": {
     "build": "gatsby build",
-    "develop": "gatsby develop -S",
+    "develop": "gatsby develop",
+    "develops": "gatsby develop -S",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "start": "node --max_old_space_size=256 ./node_modules/.bin/gatsby serve -p $PORT -H 0.0.0.0",
     "serve": "node --max_old_space_size=256 ./node_modules/.bin/gatsby serve",
