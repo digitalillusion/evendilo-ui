@@ -55,8 +55,12 @@ export async function handleSession(dispatch, action, next) {
     case "logout":
       fetch = logout()
       break
-    default:
+    case "whois":
       fetch = whois()
+      break
+    case "ping":
+    default:
+      return whois()
   }
   const payload = await fetch
   next(Actions.SESSION.propagate(action, {

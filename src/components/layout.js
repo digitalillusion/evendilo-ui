@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import IntlProvider from "react-intl/lib/src/components/provider"
 import { useSelector, useStore } from "react-redux"
 import { NavigationBuilder } from "gatsby-plugin-silverghost/lib/components/NavigationBuilder"
@@ -62,6 +62,7 @@ function Authenticated({classes, session, navigation, children}) {
 export default function Layout({ children }) {
   const store = useStore()
   const classes = useStyles()
+  const [ping, setPing] = useState(null)
   const session = useSelector(state => state.session, []).payload
   const isAnonymous = isEmpty(session) || session.anonymous
 
@@ -77,6 +78,11 @@ export default function Layout({ children }) {
       navigation.onEvent(Actions.IMPORTER)({ family: "standard", destination: session.authentication.destination })
     }
   }, [isAnonymous])
+
+  // Prevent heroku from idling
+  if (ping === null) {
+    setPing(setInterval(() => navigation.onEvent(Actions.SESSION)({ event: "ping" }), 1000 * 60 * 10));
+  }
 
   return (
     <IntlProvider key={ 'en' } locale={ 'en' }  messages={ i18nMessages }>
