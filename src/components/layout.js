@@ -43,7 +43,7 @@ function SessionButton({ onClick, label, style }) {
 
 function Anonymous({ navigation }) {
   return <div>
-    <SessionButton style={{ display: "none" }} onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "ebay" }) } label={t('session.login.ebay')} />
+    <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "ebay" }) } label={t('session.login.ebay')} />
     <SessionButton onClick={_ => navigation.onEvent(Actions.SESSION)({ event: "login", destination: "woocommerce" }) } label={t('session.login.woocommerce')} />
   </div>
 }
